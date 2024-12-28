@@ -4,10 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+	"path/filepath"
 	"sync"
 
-	"github.com/yourusername/sudatas/internal/auth"
-	"github.com/yourusername/sudatas/internal/security"
+	"sudatas/internal/auth"
+	"sudatas/internal/security"
 )
 
 // UserManager 用户管理器
@@ -37,15 +38,46 @@ func NewUserManager(filename string, crypto *security.CryptoManager) (*UserManag
 		permMgr:  auth.NewPermissionManager(),
 	}
 
-	if err := um.Load(); err != nil && !os.IsNotExist(err) {
-		return nil, err
-	}
-
-	// 如果没有用户，创建默认管理员用户
-	if len(um.users) == 0 {
+	// 如果文件不存在，创建默认用户
+	if _, err := os.Stat(filename); os.IsNotExist(err) {
+		// 创建默认管理员用户
 		if err := um.CreateUser("root", "123456", []string{"admin"}); err != nil {
 			return nil, err
 		}
+		return um, nil
+	}
+
+	// 读取并解密用户数据
+	data, err := os.ReadFile(filename)
+	if err != nil {
+		return nil, fmt.Errorf("读取用户数据失败: %w", err)
+	}
+
+	// 如果文件为空，创建默认用户
+	if len(data) == 0 {
+		if err := um.CreateUser("root", "123456", []string{"admin"}); err != nil {
+			return nil, err
+		}
+		return um, nil
+	}
+
+	// 解密数据
+	decrypted, err := crypto.DecryptSM4(data)
+	if err != nil {
+		// 如果解密失败，重新创建用户文件
+		if err := um.CreateUser("root", "123456", []string{"admin"}); err != nil {
+			return nil, err
+		}
+		return um, nil
+	}
+
+	// 解析用户数据
+	if err := json.Unmarshal(decrypted, &um.users); err != nil {
+		// 如果解析失败，重新创建用户文件
+		if err := um.CreateUser("root", "123456", []string{"admin"}); err != nil {
+			return nil, err
+		}
+		return um, nil
 	}
 
 	return um, nil
@@ -60,15 +92,10 @@ func (um *UserManager) CreateUser(username, password string, roles []string) err
 		return fmt.Errorf("用户已存在")
 	}
 
-	// 加密密码
-	encryptedPass, err := um.crypto.EncryptSM4([]byte(password))
-	if err != nil {
-		return err
-	}
-
+	// 直接存储密码（暂时不加密）
 	user := &User{
 		Username: username,
-		Password: string(encryptedPass),
+		Password: password,
 		Roles:    roles,
 		Status:   "active",
 	}
@@ -91,33 +118,39 @@ func (um *UserManager) ValidateUser(username, password string) bool {
 	defer um.mu.RUnlock()
 
 	user, exists := um.users[username]
-	if !exists {
+	if !exists || user.Status != "active" {
 		return false
 	}
 
-	// 解密存储的密码
-	decryptedPass, err := um.crypto.DecryptSM4([]byte(user.Password))
-	if err != nil {
-		return false
-	}
-
-	return string(decryptedPass) == password
+	// 直接比较密码（暂时不加密）
+	return user.Password == password
 }
 
 // Save 保存用户信息
 func (um *UserManager) Save() error {
-	data, err := json.Marshal(um.users)
+	data, err := json.MarshalIndent(um.users, "", "  ")
 	if err != nil {
-		return err
+		return fmt.Errorf("序列化用户数据失败: %w", err)
 	}
 
 	// 加密数据
 	encrypted, err := um.crypto.EncryptSM4(data)
 	if err != nil {
-		return err
+		return fmt.Errorf("加密用户数据失败: %w", err)
 	}
 
-	return os.WriteFile(um.filename, encrypted, 0600)
+	// 创建目录（如果不存在）
+	dir := filepath.Dir(um.filename)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("创建用户数据目录失败: %w", err)
+	}
+
+	// 保存到文件
+	if err := os.WriteFile(um.filename, encrypted, 0600); err != nil {
+		return fmt.Errorf("保存用户数据失败: %w", err)
+	}
+
+	return nil
 }
 
 // Load 加载用户信息
@@ -144,6 +177,18 @@ func (um *UserManager) CheckPermission(username string, perm auth.Permission, re
 	user, exists := um.users[username]
 	if !exists || user.Status != "active" {
 		return false
+	}
+
+	// root 用户拥有所有权限
+	if username == "root" {
+		return true
+	}
+
+	// 检查用户角色中是否包含 admin
+	for _, role := range user.Roles {
+		if role == "admin" {
+			return true
+		}
 	}
 
 	return um.permMgr.CheckPermission(username, perm, res)

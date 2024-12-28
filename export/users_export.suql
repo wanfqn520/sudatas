@@ -1,0 +1,82 @@
+-- SuDB 导出
+-- 集合: myapp
+-- 数据库: users
+-- 导出时间: 2024-12-28 18:27:18
+-- 版本: 1.0
+
+CREATE COLLECTION IF NOT EXISTS myapp;
+
+CREATE DATABASE IF NOT EXISTS myapp.users TYPE json DESCRIPTION '导出的数据库';
+
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 25,
+  "created": "2024-12-28T18:09:34.5626722+08:00",
+  "email": "alice@example.com",
+  "location": "Beijing",
+  "name": "Alice",
+  "role": "admin"
+};
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 30,
+  "created": "2024-12-28T18:09:34.5626722+08:00",
+  "email": "bob@example.com",
+  "location": "Shanghai",
+  "name": "Bob",
+  "role": "user"
+};
+INSERT INTO myapp.users VALUES {
+  "active": false,
+  "age": 22,
+  "created": "2024-12-28T18:09:34.5626722+08:00",
+  "email": "charlie@example.com",
+  "location": "Beijing",
+  "name": "Charlie",
+  "role": "user"
+};
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 35,
+  "created": "2024-12-28T18:09:34.5626722+08:00",
+  "email": "david@example.com",
+  "location": "Guangzhou",
+  "name": "David",
+  "role": "manager"
+};
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 25,
+  "created": "2024-12-28T18:27:18.6753989+08:00",
+  "email": "alice@example.com",
+  "location": "Beijing",
+  "name": "Alice",
+  "role": "admin"
+};
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 30,
+  "created": "2024-12-28T18:27:18.6753989+08:00",
+  "email": "bob@example.com",
+  "location": "Shanghai",
+  "name": "Bob",
+  "role": "user"
+};
+INSERT INTO myapp.users VALUES {
+  "active": false,
+  "age": 22,
+  "created": "2024-12-28T18:27:18.6753989+08:00",
+  "email": "charlie@example.com",
+  "location": "Beijing",
+  "name": "Charlie",
+  "role": "user"
+};
+INSERT INTO myapp.users VALUES {
+  "active": true,
+  "age": 35,
+  "created": "2024-12-28T18:27:18.6753989+08:00",
+  "email": "david@example.com",
+  "location": "Guangzhou",
+  "name": "David",
+  "role": "manager"
+};

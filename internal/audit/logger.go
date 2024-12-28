@@ -9,7 +9,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/yourusername/sudatas/internal/security"
+	"sudatas/internal/security"
 )
 
 // LogLevel 日志级别

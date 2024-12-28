@@ -3,45 +3,21 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
+	"sudatas/internal/security"
 )
 
-type Engine struct {
-	dataDir     string
-	collections *CollectionManager
-	backup      *BackupManager
-}
-
-type Table struct {
-	Name    string
-	Columns []Column
-	Rows    []Row
-	Indexes map[string]Index
-}
-
-type Column struct {
-	Name    string
-	Type    string
-	Indexed bool
-	IdxType IndexType
-}
-
-type Row map[string]interface{}
-
-// 事务结构
-type Transaction struct {
-	engine     *Engine
-	operations []Operation
-}
-
+// Operation 操作类型
 type Operation struct {
 	Type  OperationType
 	Table string
 	Data  Row
-	Where Condition
+	Where *Condition // 使用从 condition.go 导入的 Condition 类型
 }
 
+// OperationType 操作类型
 type OperationType int
 
 const (
@@ -50,25 +26,62 @@ const (
 	Delete
 )
 
-type Condition struct {
-	Column   string
-	Operator string
-	Value    interface{}
+// Row 数据行
+type Row map[string]interface{}
+
+// Table 表结构
+type Table struct {
+	Name    string
+	Columns []Column
+	Rows    []Row
+	Indexes map[string]Index
 }
 
-func NewEngine(dataDir string) (*Engine, error) {
-	cm, err := NewCollectionManager(dataDir)
+// Column 列定义
+type Column struct {
+	Name    string
+	Type    string
+	Indexed bool
+	IdxType IndexType
+}
+
+// Transaction 事务结构
+type Transaction struct {
+	engine     *Engine
+	operations []Operation
+}
+
+// Engine 存储引擎
+type Engine struct {
+	dataDir     string // 用户数据目录
+	builtinDir  string // 系统文件目录
+	collections *CollectionManager
+	backup      *BackupManager
+	crypto      *security.CryptoManager
+	MemStore    *MemoryStore // 添加内存存储
+}
+
+func NewEngine(dataDir, builtinDir string, crypto *security.CryptoManager) (*Engine, error) {
+	cm, err := NewCollectionManager(dataDir, builtinDir, crypto)
 	if err != nil {
 		return nil, err
 	}
 
 	engine := &Engine{
 		dataDir:     dataDir,
+		builtinDir:  builtinDir,
 		collections: cm,
+		crypto:      crypto,
+	}
+
+	// 初始化内存存储
+	engine.MemStore = NewMemoryStore(dataDir, crypto)
+	if err := engine.MemStore.LoadFromDisk(); err != nil {
+		log.Printf("加载数据失败: %v", err)
 	}
 
 	// 初始化备份管理器
-	backupDir := filepath.Join(dataDir, "backups")
+	backupDir := filepath.Join(builtinDir, "backups")
 	bm, err := NewBackupManager(backupDir, engine)
 	if err != nil {
 		return nil, err
@@ -208,7 +221,8 @@ func (e *Engine) Delete(tableName string, where *Condition) error {
 // 开始事务
 func (e *Engine) BeginTransaction() *Transaction {
 	return &Transaction{
-		engine: e,
+		engine:     e,
+		operations: make([]Operation, 0),
 	}
 }
 
@@ -432,4 +446,49 @@ func (e *Engine) ListBackups() ([]*BackupInfo, error) {
 
 func (e *Engine) DeleteBackup(backupID string) error {
 	return e.backup.DeleteBackup(backupID)
+}
+
+// 添加事务操作方法
+func (t *Transaction) AddOperation(op Operation) {
+	t.operations = append(t.operations, op)
+}
+
+// 示例使用方法
+func (t *Transaction) InsertRow(table string, data Row) {
+	t.AddOperation(Operation{
+		Type:  Insert,
+		Table: table,
+		Data:  data,
+	})
+}
+
+func (t *Transaction) UpdateRows(table string, data Row, where *Condition) {
+	t.AddOperation(Operation{
+		Type:  Update,
+		Table: table,
+		Data:  data,
+		Where: where,
+	})
+}
+
+func (t *Transaction) DeleteRows(table string, where *Condition) {
+	t.AddOperation(Operation{
+		Type:  Delete,
+		Table: table,
+		Where: where,
+	})
+}
+
+// Shutdown 关闭引擎
+func (e *Engine) Shutdown() error {
+	// 停止定时保存
+	e.MemStore.Stop()
+
+	// 最后保存一次数据
+	if err := e.MemStore.SaveToDisk(); err != nil {
+		log.Printf("保存数据失败: %v", err)
+	}
+
+	// ... 其他关闭代码 ...
+	return nil
 }

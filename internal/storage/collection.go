@@ -7,6 +7,8 @@ import (
 	"path/filepath"
 	"sync"
 	"time"
+
+	"sudatas/internal/security"
 )
 
 // StorageType 存储类型
@@ -20,13 +22,15 @@ const (
 	MaxDatabases             = 8 // 每个集合最大数据库数量
 )
 
-// Collection 数据库集合
+// Collection 集合结构
 type Collection struct {
-	Name      string              `json:"name"`
-	Owner     string              `json:"owner"`
-	Databases map[string]Database `json:"databases"`
-	mu        sync.RWMutex        `json:"-"`
-	basePath  string              `json:"-"`
+	Name      string                  `json:"name"`
+	Owner     string                  `json:"owner"`
+	Created   time.Time               `json:"created"`
+	Updated   time.Time               `json:"updated"`
+	Databases map[string]Database     `json:"databases"`
+	basePath  string                  `json:"-"`
+	crypto    *security.CryptoManager `json:"-"` // 添加加密管理器
 }
 
 // Database 数据库定义
@@ -34,8 +38,8 @@ type Database struct {
 	Name        string      `json:"name"`
 	Type        StorageType `json:"type"`
 	Description string      `json:"description"`
-	Created     int64       `json:"created"`
-	Updated     int64       `json:"updated"`
+	Created     time.Time   `json:"created"` // 改为 time.Time
+	Updated     time.Time   `json:"updated"` // 改为 time.Time
 }
 
 // CollectionManager 集合管理器
@@ -43,10 +47,12 @@ type CollectionManager struct {
 	mu          sync.RWMutex
 	collections map[string]*Collection
 	dataDir     string
+	builtinDir  string
+	crypto      *security.CryptoManager
 }
 
 // NewCollectionManager 创建集合管理器
-func NewCollectionManager(dataDir string) (*CollectionManager, error) {
+func NewCollectionManager(dataDir, builtinDir string, crypto *security.CryptoManager) (*CollectionManager, error) {
 	if err := os.MkdirAll(dataDir, 0755); err != nil {
 		return nil, fmt.Errorf("创建数据目录失败: %w", err)
 	}
@@ -54,6 +60,8 @@ func NewCollectionManager(dataDir string) (*CollectionManager, error) {
 	cm := &CollectionManager{
 		collections: make(map[string]*Collection),
 		dataDir:     dataDir,
+		builtinDir:  builtinDir,
+		crypto:      crypto,
 	}
 
 	// 加载现有集合
@@ -78,11 +86,15 @@ func (cm *CollectionManager) CreateCollection(name, owner string) (*Collection, 
 		return nil, fmt.Errorf("创建集合目录失败: %w", err)
 	}
 
+	now := time.Now()
 	collection := &Collection{
 		Name:      name,
 		Owner:     owner,
+		Created:   now,
+		Updated:   now,
 		Databases: make(map[string]Database),
 		basePath:  collectionPath,
+		crypto:    cm.crypto, // 传递加密管理器
 	}
 
 	cm.collections[name] = collection
@@ -97,30 +109,18 @@ func (cm *CollectionManager) CreateCollection(name, owner string) (*Collection, 
 
 // CreateDatabase 在集合中创建数据库
 func (c *Collection) CreateDatabase(name string, dbType StorageType, description string) error {
-	c.mu.Lock()
-	defer c.mu.Unlock()
-
-	if len(c.Databases) >= MaxDatabases {
-		return fmt.Errorf("已达到最大数据库数量限制(%d)", MaxDatabases)
-	}
-
+	// 检查数据库是否已存在
 	if _, exists := c.Databases[name]; exists {
 		return fmt.Errorf("数据库已存在: %s", name)
 	}
 
 	// 创建数据库目录
-	dbPath := filepath.Join(c.basePath, name)
+	dbPath := filepath.Join(c.basePath, name) // 移除 .sudb 后缀
 	if err := os.MkdirAll(dbPath, 0755); err != nil {
 		return fmt.Errorf("创建数据库目录失败: %w", err)
 	}
 
-	// 初始化存储引擎
-	if err := c.initializeStorage(dbPath, dbType); err != nil {
-		os.RemoveAll(dbPath)
-		return err
-	}
-
-	now := time.Now().Unix()
+	now := time.Now()
 	c.Databases[name] = Database{
 		Name:        name,
 		Type:        dbType,
@@ -129,88 +129,111 @@ func (c *Collection) CreateDatabase(name string, dbType StorageType, description
 		Updated:     now,
 	}
 
-	return c.save()
+	// 初始化存储引擎
+	if err := c.initializeStorage(dbPath, dbType); err != nil {
+		delete(c.Databases, name)
+		os.RemoveAll(dbPath) // 清理失败的目录
+		return fmt.Errorf("初始化存储引擎失败: %w", err)
+	}
+
+	// 保存集合元数据
+	if err := c.save(); err != nil {
+		delete(c.Databases, name)
+		os.RemoveAll(dbPath) // 清理失败的目录
+		return fmt.Errorf("保存集合元数据失败: %w", err)
+	}
+
+	return nil
 }
 
 // initializeStorage 初始化存储引擎
 func (c *Collection) initializeStorage(dbPath string, dbType StorageType) error {
 	switch dbType {
 	case JsonStorage:
-		return initJsonStorage(dbPath)
+		// 创建数据目录
+		dataDir := filepath.Join(dbPath, "data")
+		if err := os.MkdirAll(dataDir, 0755); err != nil {
+			return fmt.Errorf("创建数据目录失败: %w", err)
+		}
+
+		// 创建并加密元数据文件
+		metaFile := filepath.Join(dbPath, "meta.sudb")
+		meta := struct {
+			Type    string    `json:"type"`
+			Version string    `json:"version"`
+			Created time.Time `json:"created"`
+		}{
+			Type:    "json",
+			Version: "1.0",
+			Created: time.Now(),
+		}
+
+		data, err := json.MarshalIndent(meta, "", "  ")
+		if err != nil {
+			return fmt.Errorf("序列化元数据失败: %w", err)
+		}
+
+		// 加密元数据
+		encrypted, err := c.crypto.EncryptSM4(data)
+		if err != nil {
+			return fmt.Errorf("加密元数据失败: %w", err)
+		}
+
+		if err := os.WriteFile(metaFile, encrypted, 0600); err != nil {
+			return fmt.Errorf("写入元数据失败: %w", err)
+		}
+
+		return nil
+
 	case TextStorage:
-		return initTextStorage(dbPath)
+		return os.MkdirAll(filepath.Join(dbPath, "texts"), 0755)
+
 	case TableStorage:
-		return initTableStorage(dbPath)
+		if err := os.MkdirAll(filepath.Join(dbPath, "tables"), 0755); err != nil {
+			return err
+		}
+		return os.MkdirAll(filepath.Join(dbPath, "indexes"), 0755)
+
 	case GraphStorage:
-		return initGraphStorage(dbPath)
+		if err := os.MkdirAll(filepath.Join(dbPath, "nodes"), 0755); err != nil {
+			return err
+		}
+		if err := os.MkdirAll(filepath.Join(dbPath, "edges"), 0755); err != nil {
+			return err
+		}
+		return os.MkdirAll(filepath.Join(dbPath, "indexes"), 0755)
+
 	default:
 		return fmt.Errorf("不支持的存储类型: %s", dbType)
 	}
 }
 
-// 各种存储类型的初始化函数
-func initJsonStorage(path string) error {
-	metaFile := filepath.Join(path, "meta.json")
-	meta := struct {
-		Type    string `json:"type"`
-		Version string `json:"version"`
-	}{
-		Type:    "json",
-		Version: "1.0",
-	}
-	data, err := json.MarshalIndent(meta, "", "  ")
-	if err != nil {
-		return err
-	}
-	return os.WriteFile(metaFile, data, 0644)
-}
-
-func initTextStorage(path string) error {
-	// 创建文本数据目录
-	return os.MkdirAll(filepath.Join(path, "texts"), 0755)
-}
-
-func initTableStorage(path string) error {
-	// 创建表格相关目录
-	if err := os.MkdirAll(filepath.Join(path, "tables"), 0755); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(path, "indexes"), 0755); err != nil {
-		return err
-	}
-	return nil
-}
-
-func initGraphStorage(path string) error {
-	// 创建图数据库相关目录
-	if err := os.MkdirAll(filepath.Join(path, "nodes"), 0755); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(path, "edges"), 0755); err != nil {
-		return err
-	}
-	if err := os.MkdirAll(filepath.Join(path, "indexes"), 0755); err != nil {
-		return err
-	}
-	return nil
-}
-
-// save 保存集合元数据
+// save 保存集合元数据（加密）
 func (c *Collection) save() error {
-	metaFile := filepath.Join(c.basePath, "meta.json")
+	metaFile := filepath.Join(c.basePath, "meta.sudb")
 	data, err := json.MarshalIndent(c, "", "  ")
 	if err != nil {
 		return fmt.Errorf("序列化集合元数据失败: %w", err)
 	}
-	return os.WriteFile(metaFile, data, 0644)
+
+	// 使用SM4加密数据
+	encrypted, err := c.crypto.EncryptSM4(data)
+	if err != nil {
+		return fmt.Errorf("加密元数据失败: %w", err)
+	}
+
+	return os.WriteFile(metaFile, encrypted, 0600)
 }
 
-// loadCollections 加载所有集合
+// loadCollections 加载所有集合（解密）
 func (cm *CollectionManager) loadCollections() error {
 	entries, err := os.ReadDir(cm.dataDir)
 	if err != nil {
 		return fmt.Errorf("读取数据目录失败: %w", err)
 	}
+
+	// 清空现有集合
+	cm.collections = make(map[string]*Collection)
 
 	for _, entry := range entries {
 		if !entry.IsDir() {
@@ -218,11 +241,18 @@ func (cm *CollectionManager) loadCollections() error {
 		}
 
 		collectionPath := filepath.Join(cm.dataDir, entry.Name())
-		metaFile := filepath.Join(collectionPath, "meta.json")
+		metaFile := filepath.Join(collectionPath, "meta.sudb")
 
-		data, err := os.ReadFile(metaFile)
+		// 读取加密数据
+		encrypted, err := os.ReadFile(metaFile)
 		if err != nil {
 			continue // 跳过无效的集合
+		}
+
+		// 解密数据
+		data, err := cm.crypto.DecryptSM4(encrypted)
+		if err != nil {
+			continue // 跳过无法解密的集合
 		}
 
 		var collection Collection
@@ -277,4 +307,9 @@ func (cm *CollectionManager) DeleteCollection(name string) error {
 
 	delete(cm.collections, name)
 	return nil
+}
+
+// GetPath 获取集合路径
+func (c *Collection) GetPath() string {
+	return c.basePath
 }

@@ -177,7 +177,7 @@ func (bm *BackupManager) RestoreCollection(backupID string) error {
 	}
 
 	// 重新加载集合
-	if _, err := bm.engine.collections.loadCollections(); err != nil {
+	if err := bm.engine.collections.loadCollections(); err != nil {
 		return fmt.Errorf("重新加载集合失败: %w", err)
 	}
 

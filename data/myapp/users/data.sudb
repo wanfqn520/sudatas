@@ -1,0 +1,38 @@
+[
+  {
+    "active": true,
+    "age": 25,
+    "created": "2024-12-28T18:09:34.5626722+08:00",
+    "email": "alice@example.com",
+    "location": "Beijing",
+    "name": "Alice",
+    "role": "admin"
+  },
+  {
+    "active": true,
+    "age": 30,
+    "created": "2024-12-28T18:09:34.5626722+08:00",
+    "email": "bob@example.com",
+    "location": "Shanghai",
+    "name": "Bob",
+    "role": "user"
+  },
+  {
+    "active": false,
+    "age": 22,
+    "created": "2024-12-28T18:09:34.5626722+08:00",
+    "email": "charlie@example.com",
+    "location": "Beijing",
+    "name": "Charlie",
+    "role": "user"
+  },
+  {
+    "active": true,
+    "age": 35,
+    "created": "2024-12-28T18:09:34.5626722+08:00",
+    "email": "david@example.com",
+    "location": "Guangzhou",
+    "name": "David",
+    "role": "manager"
+  }
+]

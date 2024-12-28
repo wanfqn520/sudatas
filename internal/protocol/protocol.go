@@ -2,6 +2,7 @@ package protocol
 
 import (
 	"bufio"
+	"bytes"
 	"encoding/binary"
 	"fmt"
 	"io"
@@ -12,7 +13,7 @@ type Message struct {
 	Payload []byte
 }
 
-type MessageType int
+type MessageType uint32
 
 const (
 	AuthMessage MessageType = iota
@@ -23,8 +24,8 @@ const (
 
 // 消息头部结构
 type MessageHeader struct {
-	Length uint32      // 消息体长度
-	Type   MessageType // 消息类型
+	Length uint32 // 消息体长度
+	Type   uint32 // 消息类型，使用固定大小的类型
 }
 
 // ReadMessage 从连接中读取消息
@@ -42,7 +43,7 @@ func ReadMessage(reader *bufio.Reader) (*Message, error) {
 	}
 
 	return &Message{
-		Type:    header.Type,
+		Type:    MessageType(header.Type),
 		Payload: payload,
 	}, nil
 }
@@ -52,10 +53,10 @@ func WriteMessage(writer io.Writer, msg *Message) error {
 	// 写入消息头
 	header := MessageHeader{
 		Length: uint32(len(msg.Payload)),
-		Type:   msg.Type,
+		Type:   uint32(msg.Type),
 	}
 
-	if err := binary.Write(writer, binary.BigEndian, header); err != nil {
+	if err := binary.Write(writer, binary.BigEndian, &header); err != nil {
 		return fmt.Errorf("写入消息头错误: %w", err)
 	}
 
@@ -67,10 +68,36 @@ func WriteMessage(writer io.Writer, msg *Message) error {
 	return nil
 }
 
+// EncodeMessage 将消息编码为字节流
 func EncodeMessage(msg *Message) []byte {
-	// 实现消息编码
+	var buf bytes.Buffer
+	header := MessageHeader{
+		Length: uint32(len(msg.Payload)),
+		Type:   uint32(msg.Type),
+	}
+	binary.Write(&buf, binary.BigEndian, &header)
+	buf.Write(msg.Payload)
+	return buf.Bytes()
 }
 
+// DecodeMessage 从字节流解码消息
 func DecodeMessage(data []byte) (*Message, error) {
-	// 实现消息解码
+	if len(data) < 8 {
+		return nil, fmt.Errorf("消息太短")
+	}
+
+	var header MessageHeader
+	buf := bytes.NewReader(data)
+	if err := binary.Read(buf, binary.BigEndian, &header); err != nil {
+		return nil, err
+	}
+
+	if uint32(len(data)-8) < header.Length {
+		return nil, fmt.Errorf("消息负载长度不正确")
+	}
+
+	return &Message{
+		Type:    MessageType(header.Type),
+		Payload: data[8 : 8+header.Length],
+	}, nil
 }

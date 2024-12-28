@@ -3,10 +3,11 @@ package security
 import (
 	"bytes"
 	"crypto/rand"
-	"encoding/binary"
 	"fmt"
 	"io"
+	"math/big"
 	"os"
+	"path/filepath"
 
 	"github.com/tjfoc/gmsm/sm2"
 	"github.com/tjfoc/gmsm/sm4"
@@ -32,7 +33,7 @@ func NewCryptoManager() (*CryptoManager, error) {
 		return nil, fmt.Errorf("生成SM2密钥对失败: %w", err)
 	}
 
-	// 生成SM4密钥
+	// 生成SM4密钥（确保是16字节）
 	sm4Key := make([]byte, 16)
 	if _, err := io.ReadFull(rand.Reader, sm4Key); err != nil {
 		return nil, fmt.Errorf("生成SM4密钥失败: %w", err)
@@ -49,12 +50,14 @@ func NewCryptoManager() (*CryptoManager, error) {
 
 // EncryptSM2 使用SM2加密
 func (cm *CryptoManager) EncryptSM2(data []byte) ([]byte, error) {
-	return sm2.Encrypt(rand.Reader, cm.keyPair.PublicKey, data, nil)
+	// 使用 sm2.EncryptAsn1 的正确方式，添加随机数生成器
+	return sm2.EncryptAsn1(cm.keyPair.PublicKey, data, rand.Reader)
 }
 
 // DecryptSM2 使用SM2解密
 func (cm *CryptoManager) DecryptSM2(ciphertext []byte) ([]byte, error) {
-	return sm2.Decrypt(cm.keyPair.PrivateKey, ciphertext)
+	// 使用 sm2.DecryptAsn1 的正确方式
+	return sm2.DecryptAsn1(cm.keyPair.PrivateKey, ciphertext)
 }
 
 // EncryptSM4 使用SM4加密
@@ -93,60 +96,66 @@ func (cm *CryptoManager) DecryptSM4(ciphertext []byte) ([]byte, error) {
 
 // SaveKeys 保存密钥到文件
 func (cm *CryptoManager) SaveKeys(filename string) error {
-	var buf bytes.Buffer
-
-	// 保存SM2私钥
-	privateKeyBytes, err := cm.keyPair.PrivateKey.GetRawBytes()
-	if err != nil {
-		return err
-	}
-	binary.Write(&buf, binary.BigEndian, uint32(len(privateKeyBytes)))
-	buf.Write(privateKeyBytes)
-
-	// 保存SM4密钥
-	binary.Write(&buf, binary.BigEndian, uint32(len(cm.sm4Key)))
-	buf.Write(cm.sm4Key)
-
-	// 加密整个buffer并保存
-	encrypted, err := cm.EncryptSM2(buf.Bytes())
-	if err != nil {
-		return err
+	// 创建密钥目录
+	dir := filepath.Dir(filename)
+	if err := os.MkdirAll(dir, 0755); err != nil {
+		return fmt.Errorf("创建密钥目录失败: %w", err)
 	}
 
-	return os.WriteFile(filename, encrypted, 0600)
+	// 保存私钥文件
+	privateKeyFile := filename + ".pri"
+	if err := os.WriteFile(privateKeyFile, cm.keyPair.PrivateKey.D.Bytes(), 0600); err != nil {
+		return fmt.Errorf("保存私钥失败: %w", err)
+	}
+
+	// 保存SM4密钥文件
+	sm4KeyFile := filename + ".sm4"
+	if err := os.WriteFile(sm4KeyFile, cm.sm4Key, 0600); err != nil {
+		return fmt.Errorf("保存SM4密钥失败: %w", err)
+	}
+
+	return nil
 }
 
 // LoadKeys 从文件加载密钥
 func (cm *CryptoManager) LoadKeys(filename string) error {
-	data, err := os.ReadFile(filename)
-	if err != nil {
-		return err
+	// 检查私钥文件
+	privateKeyFile := filename + ".pri"
+	if _, err := os.Stat(privateKeyFile); os.IsNotExist(err) {
+		// 如果文件不存在，创建新的密钥管理器
+		newCrypto, err := NewCryptoManager()
+		if err != nil {
+			return fmt.Errorf("创建新密钥失败: %w", err)
+		}
+		cm.keyPair = newCrypto.keyPair
+		cm.sm4Key = newCrypto.sm4Key
+		return cm.SaveKeys(filename)
 	}
 
-	// 解密数据
-	decrypted, err := cm.DecryptSM2(data)
+	// 读取私钥
+	privateKeyBytes, err := os.ReadFile(privateKeyFile)
 	if err != nil {
-		return err
+		return fmt.Errorf("读取私钥失败: %w", err)
 	}
 
-	buf := bytes.NewReader(decrypted)
-
-	// 读取SM2私钥
-	var privateKeyLen uint32
-	binary.Read(buf, binary.BigEndian, &privateKeyLen)
-	privateKeyBytes := make([]byte, privateKeyLen)
-	buf.Read(privateKeyBytes)
-	cm.keyPair.PrivateKey, err = sm2.RawBytesToPrivateKey(privateKeyBytes)
-	if err != nil {
-		return err
-	}
-	cm.keyPair.PublicKey = &cm.keyPair.PrivateKey.PublicKey
+	// 重新构造私钥
+	privateKey := new(sm2.PrivateKey)
+	privateKey.Curve = sm2.P256Sm2()
+	privateKey.D = new(big.Int).SetBytes(privateKeyBytes)
+	privateKey.PublicKey.X, privateKey.PublicKey.Y = privateKey.Curve.ScalarBaseMult(privateKeyBytes)
 
 	// 读取SM4密钥
-	var sm4KeyLen uint32
-	binary.Read(buf, binary.BigEndian, &sm4KeyLen)
-	cm.sm4Key = make([]byte, sm4KeyLen)
-	buf.Read(cm.sm4Key)
+	sm4KeyFile := filename + ".sm4"
+	sm4Key, err := os.ReadFile(sm4KeyFile)
+	if err != nil || len(sm4Key) != 16 {
+		return fmt.Errorf("读取SM4密钥失败: %w", err)
+	}
+
+	cm.keyPair = &KeyPair{
+		PrivateKey: privateKey,
+		PublicKey:  &privateKey.PublicKey,
+	}
+	cm.sm4Key = sm4Key
 
 	return nil
 }
