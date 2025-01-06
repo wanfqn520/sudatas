@@ -346,6 +346,25 @@ func (s *Server) handleQuery(client *Client, msg *protocol.Message) (*protocol.M
 			Name: fmt.Sprintf("%s.%s", stmt.Collection, stmt.Database),
 		}
 
+	case "UPDATE":
+		// 更新数据
+		if err := s.engine.MemStore.UpdateRecords(stmt.Collection, stmt.Database, stmt.Data, stmt.Filter); err != nil {
+			return nil, err
+		}
+
+		result := map[string]interface{}{
+			"message": "更新成功",
+		}
+		resultData, err := json.Marshal(result)
+		if err != nil {
+			return nil, fmt.Errorf("序列化结果失败: %w", err)
+		}
+
+		return &protocol.Message{
+			Type:    protocol.ResultMessage,
+			Payload: resultData,
+		}, nil
+
 	default:
 		return nil, fmt.Errorf("不支持的操作类型: %s", stmt.Type)
 	}
@@ -539,6 +558,17 @@ func (s *Server) executeQuery(stmt *parser.Statement) ([]byte, error) {
 		result := map[string]interface{}{
 			"message": "导出成功",
 			"path":    stmt.FilePath,
+		}
+		return json.Marshal(result)
+
+	case "UPDATE":
+		// 更新数据
+		if err := s.engine.MemStore.UpdateRecords(stmt.Collection, stmt.Database, stmt.Data, stmt.Filter); err != nil {
+			return nil, err
+		}
+
+		result := map[string]interface{}{
+			"message": "更新成功",
 		}
 		return json.Marshal(result)
 

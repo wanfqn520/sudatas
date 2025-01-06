@@ -1,0 +1,202 @@
+[
+  {
+    "avatar": "resources/images/circles/kuizhou_plum.jpg",
+    "category": "传统技艺",
+    "comments": 234,
+    "create_time": "2023-12-01 10:00:00",
+    "description": "夔州脆李，重庆市级非物质文化遗产，探讨传统种植技艺和加工工艺，分享脆李文化故事。",
+    "id": "circle_001",
+    "likes": 456,
+    "location": "重庆市奉节县",
+    "members": 328,
+    "name": "重庆夔州脆李传承圈",
+    "owner": "13801001001",
+    "posts": 156,
+    "tags": [
+      "美食",
+      "农业",
+      "传统技艺"
+    ],
+    "views": 2890
+  },
+  {
+    "avatar": "resources/images/circles/paper_cutting.jpg",
+    "category": "民间美术",
+    "comments": 345,
+    "create_time": "2023-11-15 14:30:00",
+    "description": "重庆剪纸，国家级非物质文化遗产，交流剪纸技艺，展示作品，传承巴渝民间艺术。",
+    "id": "circle_002",
+    "likes": 678,
+    "location": "重庆市渝中区",
+    "members": 562,
+    "name": "巴渝剪纸艺术圈",
+    "owner": "13801001002",
+    "posts": 289,
+    "tags": [
+      "手工艺",
+      "视觉艺术",
+      "民间艺术"
+    ],
+    "views": 3560
+  },
+  {
+    "avatar": "resources/images/circles/vinegar.jpg",
+    "category": "传统美食",
+    "comments": 167,
+    "create_time": "2023-12-10 09:15:00",
+    "description": "江津米醋，重庆市级非遗，探讨传统酿造工艺，分享美食文化，传承百年老技艺。",
+    "id": "circle_003",
+    "likes": 389,
+    "location": "重庆市江津区",
+    "members": 425,
+    "name": "江津米醋传承会",
+    "owner": "13801001003",
+    "posts": 198,
+    "tags": [
+      "美食",
+      "传统工艺",
+      "饮食文化"
+    ],
+    "views": 2450
+  },
+  {
+    "avatar": "resources/images/circles/folding_fan.jpg",
+    "category": "传统工艺",
+    "comments": 456,
+    "create_time": "2023-10-20 16:45:00",
+    "description": "荣昌折扇，国家级非物质文化遗产，交流制扇技艺，展示精美作品，传承扇艺文化。",
+    "id": "circle_004",
+    "likes": 892,
+    "location": "重庆市荣昌区",
+    "members": 634,
+    "name": "荣昌折扇艺术圈",
+    "owner": "13801001004",
+    "posts": 312,
+    "tags": [
+      "手工艺",
+      "传统工艺",
+      "文化艺术"
+    ],
+    "views": 4120
+  },
+  {
+    "avatar": "resources/images/circles/woodblock.jpg",
+    "category": "民间美术",
+    "comments": 289,
+    "create_time": "2023-11-05 11:20:00",
+    "description": "梁平木版年画，市级非遗，交流木版印刷技艺，分享年画艺术，传承民间文化。",
+    "id": "circle_005",
+    "likes": 567,
+    "location": "重庆市梁平区",
+    "members": 486,
+    "name": "梁平木版年画社",
+    "owner": "13801001005",
+    "posts": 234,
+    "tags": [
+      "版画",
+      "民间艺术",
+      "传统节日"
+    ],
+    "views": 3280
+  },
+  {
+    "avatar": "resources/images/circles/brocade.jpg",
+    "category": "传统技艺",
+    "comments": 378,
+    "create_time": "2023-12-05 13:40:00",
+    "description": "土家族织锦，国家级非遗，交流传统织锦技艺，展示精美作品，传承民族文化。",
+    "id": "circle_006",
+    "likes": 723,
+    "location": "重庆市酉阳县",
+    "members": 527,
+    "name": "酉阳桃花源织锦圈",
+    "owner": "13801001006",
+    "posts": 267,
+    "tags": [
+      "织锦",
+      "民族文化",
+      "手工艺"
+    ],
+    "views": 3890
+  },
+  {
+    "avatar": "resources/images/circles/zhacai.jpg",
+    "category": "传统美食",
+    "comments": 678,
+    "create_time": "2023-10-15 15:10:00",
+    "description": "涪陵榨菜制作技艺，国家级非遗，交流榨菜制作工艺，分享美食文化。",
+    "id": "circle_007",
+    "likes": 1234,
+    "location": "重庆市涪陵区",
+    "members": 892,
+    "name": "涪陵榨菜传承圈",
+    "owner": "13801001007",
+    "posts": 445,
+    "tags": [
+      "美食",
+      "传统技艺",
+      "饮食文化"
+    ],
+    "views": 5670
+  },
+  {
+    "avatar": "resources/images/circles/goddess_dance.jpg",
+    "category": "表演艺术",
+    "comments": 245,
+    "create_time": "2023-11-25 10:30:00",
+    "description": "巫山神女舞，市级非遗，交流传统舞蹈技艺，展示巫山文化，传承艺术精髓。",
+    "id": "circle_008",
+    "likes": 534,
+    "location": "重庆市巫山县",
+    "members": 463,
+    "name": "巫山神女舞研习社",
+    "owner": "13801001008",
+    "posts": 223,
+    "tags": [
+      "舞蹈",
+      "表演艺术",
+      "民间文化"
+    ],
+    "views": 3120
+  },
+  {
+    "avatar": "resources/images/circles/dazu_rock.jpg",
+    "category": "文物保护",
+    "comments": 467,
+    "create_time": "2023-09-30 14:20:00",
+    "description": "大足石刻，世界文化遗产，交流石刻保护知识，分享考古发现，传承文化遗产。",
+    "id": "circle_009",
+    "likes": 945,
+    "location": "重庆市大足区",
+    "members": 756,
+    "name": "大足石刻保护圈",
+    "owner": "13801001009",
+    "posts": 378,
+    "tags": [
+      "石刻",
+      "文物保护",
+      "佛教艺术"
+    ],
+    "views": 4890
+  },
+  {
+    "avatar": "resources/images/circles/fengdu_food.jpg",
+    "category": "传统美食",
+    "comments": 345,
+    "create_time": "2023-12-15 12:00:00",
+    "description": "丰都鬼城小吃制作技艺，市级非遗，交流传统小吃制作技艺，分享饮食文化。",
+    "id": "circle_010",
+    "likes": 678,
+    "location": "重庆市丰都县",
+    "members": 645,
+    "name": "丰都鬼城小吃圈",
+    "owner": "13801001010",
+    "posts": 312,
+    "tags": [
+      "美食",
+      "传统小吃",
+      "饮食文化"
+    ],
+    "views": 3780
+  }
+]

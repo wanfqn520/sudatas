@@ -1,0 +1,18 @@
+[
+  {
+    "account_status": "true",
+    "age": "18",
+    "creation_time": "2024-12-29 23:33:31",
+    "fans": 0,
+    "follow": 0,
+    "gender": "女",
+    "introduction": "这是我的个人简介",
+    "number": 13800138400,
+    "password": "1234526",
+    "profile": "pictures/13800138400_1735486653.jpg",
+    "token": "EFGHIJKLMNOPQRSTUVWXYZabcdefghi",
+    "token_validity": "2024-12-30 23:37:33",
+    "user": "YUE",
+    "visitor": 0
+  }
+]

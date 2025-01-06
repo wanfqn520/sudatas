@@ -2,6 +2,7 @@ package storage
 
 import (
 	"encoding/json"
+	"fmt"
 	"log"
 	"os"
 	"path/filepath"
@@ -266,5 +267,39 @@ func (ms *MemoryStore) LoadFromDisk() error {
 	}
 
 	ms.dirty = false
+	return nil
+}
+
+// UpdateRecords 更新记录
+func (ms *MemoryStore) UpdateRecords(collection, database string, updates map[string]interface{}, filter map[string]interface{}) error {
+	ms.mu.Lock()
+	defer ms.mu.Unlock()
+
+	// 检查集合和数据库是否存在
+	if _, exists := ms.data[collection]; !exists {
+		return fmt.Errorf("集合不存在: %s", collection)
+	}
+	if _, exists := ms.data[collection][database]; !exists {
+		return fmt.Errorf("数据库不存在: %s", database)
+	}
+
+	// 更新匹配的记录
+	records := ms.data[collection][database]
+	updated := false
+
+	for i, record := range records {
+		if MatchConditions(record, filter) {
+			// 更新记录
+			for key, value := range updates {
+				records[i][key] = value
+			}
+			updated = true
+		}
+	}
+
+	if updated {
+		ms.dirty = true
+	}
+
 	return nil
 }

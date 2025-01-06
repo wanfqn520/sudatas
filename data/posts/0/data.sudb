@@ -1,0 +1,203 @@
+ [
+        {
+            "id": "post_001",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆江津四面山皮影戏：光影中的民间艺术瑰宝",
+                "text": "今天有幸观看了江津四面山的皮影戏表演，这项已有200多年历史的非遗艺术太震撼了！皮影造型精美，表演细腻，音乐韵味十足。特别是《白蛇传》片段，让人仿佛穿越回古代戏台。\n\n老艺人说现在年轻人愿意学习的很少，希望通过新媒体让更多人了解这门艺术。",
+                "images": [
+                    "/resources/img/shadow_puppet1.jpg",
+                    "/resources/img/shadow_puppet2.jpg"
+                ],
+                "author": "13800138001",
+                "create_time": "2024-01-28 10:30:00",
+                "views": 2156,
+                "likes": 328,
+                "comments": 89,
+                "shares": 156,
+                "tags": ["皮影戏", "非遗传承", "民间艺术"]
+            }
+        },
+        {
+            "id": "post_002",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "走进荣昌折扇制作大师的工作室",
+                "text": "荣昌折扇，重庆市级非物质文化遗产。今天采访了张师傅，见证了一把折扇从竹片到成品的全过程。\n\n最让我惊叹的是装裱工序，需要把扇面裱在扇骨上，一点误差都不能有。张师傅说一把好扇子要经过72道工序，难怪被称为"纸上乾坤"。",
+                "images": [
+                    "/resources/img/folding_fan1.jpg",
+                    "/resources/img/folding_fan2.jpg",
+                    "/resources/img/folding_fan3.jpg"
+                ],
+                "author": "13800138002",
+                "create_time": "2024-01-27 15:45:00",
+                "views": 1892,
+                "likes": 267,
+                "comments": 45,
+                "shares": 89,
+                "tags": ["荣昌折扇", "手工艺", "非遗传承"]
+            }
+        },
+        {
+            "id": "post_003",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆酸辣粉制作技艺：一碗魂牵梦萦的乡愁",
+                "text": "今天跟着李师傅学习了传统酸辣粉的制作工艺。从红薯粉的选料、制作，到汤料的熬制，每一步都是考究。\n\n最特别的是那个"跷脚粉"的制作技巧，据说这是清末民初重庆江湖卖粉人的独门绝技。看着热气腾腾的一碗粉，才明白为什么它能入选非遗名录。",
+                "images": [
+                    "/resources/img/suanlafen1.jpg",
+                    "/resources/img/suanlafen2.jpg"
+                ],
+                "author": "13800138003",
+                "create_time": "2024-01-26 12:20:00",
+                "views": 3267,
+                "likes": 892,
+                "comments": 234,
+                "shares": 445,
+                "tags": ["酸辣粉", "美食文化", "非遗美食"]
+            }
+        },
+        {
+            "id": "post_004",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "巴渝绣娘：守护重庆丝绣艺术的匠心传承",
+                "text": "走访了重庆璧山的蜀绣工作室，90后绣娘小张让我大开眼界。她说现在的蜀绣在保持传统工艺的基础上，融入了更多现代元素。\n\n最让我印象深刻的是她正在创作的一幅城市印象系列作品，用蜀绣技法诠释重庆的立体山城风貌，传统与现代的碰撞太惊艳了！",
+                "images": [
+                    "/resources/img/embroidery1.jpg",
+                    "/resources/img/embroidery2.jpg"
+                ],
+                "author": "13800138004",
+                "create_time": "2024-01-25 16:15:00",
+                "views": 1567,
+                "likes": 345,
+                "comments": 78,
+                "shares": 123,
+                "tags": ["蜀绣", "非遗传承", "手工艺"]
+            }
+        },
+        {
+            "id": "post_005",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆石柱土家族摆手舞：原生态民族舞蹈的魅力",
+                "text": "在石柱县参加了一场土家族摆手舞表演，太震撼了！上百人齐跳摆手舞的场面让人热血沸腾。\n\n据说摆手舞源于土家族祭祀仪式，现在已经成为欢庆节日的重要舞蹈。最特别的是那个"摆手调"，光是听着就让人忍不住想跟着舞动起来。",
+                "images": [
+                    "/resources/img/dance1.jpg",
+                    "/resources/img/dance2.jpg"
+                ],
+                "author": "13800138005",
+                "create_time": "2024-01-24 20:30:00",
+                "views": 2789,
+                "likes": 567,
+                "comments": 156,
+                "shares": 234,
+                "tags": ["摆手舞", "土家族", "非遗文化"]
+            }
+        },
+        {
+            "id": "post_006",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆铜梁龙舞：腾云驾雾的民间绝技",
+                "text": "铜梁龙舞果然名不虚传！今天看了一场传统龙舞表演，9节龙身，13个演员，配合天衣无缝。\n\n最厉害的是"龙出水"和"龙戏珠"两个动作，龙身盘旋起伏，宛如活物。听说要成为一名优秀的龙舞演员，没有十年功夫练不成。",
+                "images": [
+                    "/resources/img/dragon_dance1.jpg",
+                    "/resources/img/dragon_dance2.jpg"
+                ],
+                "author": "13800138006",
+                "create_time": "2024-01-23 14:20:00",
+                "views": 4567,
+                "likes": 1234,
+                "comments": 445,
+                "shares": 678,
+                "tags": ["铜梁龙舞", "非遗文化", "民间艺术"]
+            }
+        },
+        {
+            "id": "post_007",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆大足石刻修复技艺：千年艺术的守护者",
+                "text": "今天采访了大足石刻的修复团队，了解了这项精密的非遗技艺。每一处修复都需要严格遵循"最小干预"原则，用传统材料和工艺。\n\n让我最感动的是修复团队对细节的执着，仅一尊佛像的修复就可能需要数月甚至数年时间。这就是匠人精神！",
+                "images": [
+                    "/resources/img/stone_carving1.jpg",
+                    "/resources/img/stone_carving2.jpg"
+                ],
+                "author": "13800138007",
+                "create_time": "2024-01-22 11:40:00",
+                "views": 2345,
+                "likes": 678,
+                "comments": 167,
+                "shares": 289,
+                "tags": ["大足石刻", "文物修复", "非遗技艺"]
+            }
+        },
+        {
+            "id": "post_008",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆涪陵榨菜制作工艺：一罐咸香的乡土记忆",
+                "text": "探访了涪陵榨菜传统制作工艺，从青菜选择到腌制、晾晒，每道工序都很讲究。最神奇的是发酵环节，需要经验丰富的师傅把控时间和温度。\n\n原来一罐好的榨菜，需要经过28道工序，难怪能成为重庆非遗美食代表。",
+                "images": [
+                    "/resources/img/zhacai1.jpg",
+                    "/resources/img/zhacai2.jpg"
+                ],
+                "author": "13800138008",
+                "create_time": "2024-01-21 09:15:00",
+                "views": 1987,
+                "likes": 456,
+                "comments": 123,
+                "shares": 234,
+                "tags": ["涪陵榨菜", "非遗美食", "传统工艺"]
+            }
+        },
+        {
+            "id": "post_009",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆梁平木版年画：新春里的传统年味",
+                "text": "春节临近，走访了梁平木版年画的制作工坊。看着师傅熟练地雕版、刷色、套印，一张充满年味的作品就这样诞生了。\n\n最有意思的是那些版画题材，有传统的门神、年景，也有新创作的重庆地标版画，传统与现代的完美融合。",
+                "images": [
+                    "/resources/img/new_year_picture1.jpg",
+                    "/resources/img/new_year_picture2.jpg"
+                ],
+                "author": "13800138009",
+                "create_time": "2024-01-20 17:50:00",
+                "views": 2678,
+                "likes": 789,
+                "comments": 234,
+                "shares": 345,
+                "tags": ["木版年画", "非遗艺术", "传统文化"]
+            }
+        },
+        {
+            "id": "post_010",
+            "type": "post",
+            "collection": "0",
+            "content": {
+                "title": "重庆万州三峡挂面：匠心传承的面条技艺",
+                "text": "探访了一家传承了四代人的三峡挂面作坊。从和面、压面到晾晒，每个环节都有独特的技巧。\n\n最让我惊讶的是他们依然保持着传统的手工制作方式，一根面条要经过108道工序。难怪这挂面筋道爽滑，入选了重庆市非遗名录。",
+                "images": [
+                    "/resources/img/noodle1.jpg",
+                    "/resources/img/noodle2.jpg"
+                ],
+                "author": "13800138010",
+                "create_time": "2024-01-19 13:25:00",
+                "views": 1876,
+                "likes": 432,
+                "comments": 98,
+                "shares": 167,
+                "tags": ["三峡挂面", "非遗美食", "传统工艺"]
+            }
+        }
+    ]

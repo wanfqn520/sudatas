@@ -3,6 +3,7 @@ package parser
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"sudatas/internal/storage"
@@ -206,6 +207,116 @@ func (p *SQLParser) Parse(sql string) (*Statement, error) {
 		stmt.Collection = names[0]
 		stmt.Database = names[1]
 		stmt.FilePath = strings.Join(parts[3:], " ")
+		return stmt, nil
+
+	case "UPDATE":
+		// UPDATE collection.database SET field = value WHERE {...}
+		if len(parts) < 4 {
+			return nil, fmt.Errorf("无效的UPDATE语句")
+		}
+
+		// 解析集合和数据库名称
+		names := strings.Split(parts[1], ".")
+		if len(names) != 2 {
+			return nil, fmt.Errorf("无效的数据库名称格式，应为: collection.database")
+		}
+		stmt.Collection = names[0]
+		stmt.Database = names[1]
+
+		// 查找 SET 和 WHERE 关键字的位置
+		setIndex := -1
+		whereIndex := -1
+		for i, part := range parts {
+			if strings.ToUpper(part) == "SET" {
+				setIndex = i
+			} else if strings.ToUpper(part) == "WHERE" {
+				whereIndex = i
+				break
+			}
+		}
+
+		if setIndex == -1 {
+			return nil, fmt.Errorf("UPDATE语句缺少SET子句")
+		}
+
+		// 解析SET子句
+		var updates = make(map[string]interface{})
+		setStr := strings.Join(parts[setIndex+1:whereIndex], " ")
+
+		// 使用状态机解析SET子句
+		var key, value string
+		var inQuote bool
+		var current strings.Builder
+
+		for i := 0; i < len(setStr); i++ {
+			ch := setStr[i]
+
+			switch ch {
+			case '\'':
+				inQuote = !inQuote
+				current.WriteByte(ch)
+			case '=':
+				if !inQuote {
+					key = strings.TrimSpace(current.String())
+					current.Reset()
+					continue
+				}
+				current.WriteByte(ch)
+			case ',':
+				if !inQuote {
+					value = strings.TrimSpace(current.String())
+					// 处理键值对
+					if key != "" {
+						// 处理字符串值（去除引号）
+						if strings.HasPrefix(value, "'") && strings.HasSuffix(value, "'") {
+							value = value[1 : len(value)-1]
+						}
+						updates[key] = value
+					}
+					key = ""
+					current.Reset()
+					continue
+				}
+				current.WriteByte(ch)
+			default:
+				current.WriteByte(ch)
+			}
+		}
+
+		// 处理最后一个键值对
+		if key != "" {
+			value = strings.TrimSpace(current.String())
+			if strings.HasPrefix(value, "'") && strings.HasSuffix(value, "'") {
+				value = value[1 : len(value)-1]
+			}
+			updates[key] = value
+		}
+
+		stmt.Data = updates
+
+		// 解析WHERE子句
+		if whereIndex != -1 {
+			whereStr := strings.Join(parts[whereIndex+1:], " ")
+			// 构造简单的条件映射
+			filter := make(map[string]interface{})
+			// 解析 key = value 格式
+			whereParts := strings.Split(whereStr, "=")
+			if len(whereParts) != 2 {
+				return nil, fmt.Errorf("无效的WHERE子句格式")
+			}
+			key := strings.TrimSpace(whereParts[0])
+			value := strings.TrimSpace(whereParts[1])
+
+			// 尝试将值转换为数字
+			if numVal, err := strconv.ParseFloat(value, 64); err == nil {
+				filter[key] = numVal
+			} else {
+				// 否则作为字符串处理
+				filter[key] = value
+			}
+			stmt.Filter = filter
+		}
+
 		return stmt, nil
 
 	default:

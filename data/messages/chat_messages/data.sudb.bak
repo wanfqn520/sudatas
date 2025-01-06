@@ -1,0 +1,18 @@
+[
+  {
+    "content": "测试消息",
+    "from_user": 13800138000,
+    "read_state": false,
+    "send_time": "2024-12-29 23:43:56",
+    "to_user": 13900139000,
+    "type": "text"
+  },
+  {
+    "content": "测试消息",
+    "from_user": 13800138000,
+    "read_state": false,
+    "send_time": "2024-12-29 23:44:24",
+    "to_user": 13900139000,
+    "type": "text"
+  }
+]

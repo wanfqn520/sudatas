@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net"
+	"strings"
 	"time"
 )
 
@@ -152,6 +153,44 @@ func (c *Client) Query(sql string) ([]map[string]interface{}, error) {
 	}
 
 	return result, nil
+}
+
+// Update 更新数据（自动连接）
+func (c *Client) Update(collection, database string, updates map[string]interface{}, where map[string]interface{}) error {
+	if err := c.Connect(); err != nil {
+		return err
+	}
+
+	// 构造 SET 子句
+	var setParts []string
+	for key, value := range updates {
+		// 根据值的类型添加适当的引号
+		var valueStr string
+		switch v := value.(type) {
+		case string:
+			valueStr = fmt.Sprintf("'%s'", v)
+		default:
+			valueStr = fmt.Sprintf("%v", v)
+		}
+		setParts = append(setParts, fmt.Sprintf("%s = %s", key, valueStr))
+	}
+
+	// 构造 WHERE 子句
+	whereJson, err := json.Marshal(where)
+	if err != nil {
+		return fmt.Errorf("序列化WHERE条件失败: %w", err)
+	}
+
+	// 构造完整的 UPDATE 语句
+	sql := fmt.Sprintf("UPDATE %s.%s SET %s WHERE %s",
+		collection,
+		database,
+		strings.Join(setParts, ", "),
+		string(whereJson),
+	)
+
+	_, err = c.Query(sql)
+	return err
 }
 
 // 内部方法

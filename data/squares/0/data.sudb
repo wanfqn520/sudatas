@@ -1,0 +1,165 @@
+[
+  {
+    "author": "13800138001",
+    "category": "非遗技艺",
+    "comments": 89,
+    "content": "夔州脆李是重庆市巫山县传统特产，制作技艺已有百年历史。今天邀请到非遗传承人张大师现场展示腌制技艺，让我们一起了解这项独特的非遗文化。",
+    "create_time": "2024-01-28 10:30:00",
+    "id": "sq_001",
+    "likes": 328,
+    "location": "重庆市巫山县",
+    "media": [
+      "/resources/img/sq_001_1.jpg",
+      "/resources/img/sq_001_2.jpg",
+      "/resources/video/sq_001_demo.mp4"
+    ],
+    "title": "重庆夔州脆李制作技艺展示",
+    "views": 1520
+  },
+  {
+    "author": "13800138002",
+    "category": "传统工艺",
+    "comments": 125,
+    "content": "石宝青石雕刻是重庆市潼南区非物质文化遗产，历史可追溯至明清时期。本期我们探访了石宝镇著名的雕刻大师李师傅的工作室，近距离感受精湛的雕刻技艺。",
+    "create_time": "2024-01-27 15:45:00",
+    "id": "sq_002",
+    "likes": 567,
+    "location": "重庆市潼南区",
+    "media": [
+      "/resources/img/sq_002_1.jpg",
+      "/resources/img/sq_002_2.jpg"
+    ],
+    "title": "走进重庆石宝镇青石雕刻工坊",
+    "views": 2341
+  },
+  {
+    "author": "13800138003",
+    "category": "传统美食",
+    "comments": 234,
+    "content": "第三届酉阳桃花源非遗美食节盛大开幕！现场展示了土家族酸茶、麻鸭子、糍粑等传统美食制作技艺，让游客体验独特的土家族饮食文化。",
+    "create_time": "2024-01-26 09:15:00",
+    "id": "sq_003",
+    "likes": 892,
+    "location": "重庆市酉阳县",
+    "media": [
+      "/resources/img/sq_003_1.jpg",
+      "/resources/img/sq_003_2.jpg",
+      "/resources/img/sq_003_3.jpg"
+    ],
+    "title": "重庆酉阳桃花源非遗美食节开幕",
+    "views": 3876
+  },
+  {
+    "author": "13800138004",
+    "category": "传统工艺",
+    "comments": 98,
+    "content": "荣昌折扇是重庆市级非物质文化遗产，今天在荣昌区文化馆开展了折扇制作技艺传承活动，多位非遗传承人现场展示了选材、刻画等精细工序。",
+    "create_time": "2024-01-25 14:20:00",
+    "id": "sq_004",
+    "likes": 445,
+    "location": "重庆市荣昌区",
+    "media": [
+      "/resources/img/sq_004_1.jpg",
+      "/resources/video/sq_004_demo.mp4"
+    ],
+    "title": "荣昌折扇制作技艺传承活动",
+    "views": 1987
+  },
+  {
+    "author": "13800138005",
+    "category": "民间艺术",
+    "comments": 345,
+    "content": "作为国家级非物质文化遗产，铜梁龙舞以其独特的表演形式和深厚的文化内涵闻名。今天在铜梁区文化广场，龙舞艺术团带来了精彩的表演。",
+    "create_time": "2024-01-24 19:30:00",
+    "id": "sq_005",
+    "likes": 1234,
+    "location": "重庆市铜梁区",
+    "media": [
+      "/resources/img/sq_005_1.jpg",
+      "/resources/video/sq_005_show.mp4"
+    ],
+    "title": "铜梁龙舞表演惊艳亮相",
+    "views": 5632
+  },
+  {
+    "author": "13800138006",
+    "category": "传统美食",
+    "comments": 156,
+    "content": "永川豆豉是重庆市著名的非遗美食，制作工艺独特。本次活动邀请到了永川豆豉第四代传承人王师傅，为大家详细讲解传统制作工艺。",
+    "create_time": "2024-01-23 11:40:00",
+    "id": "sq_006",
+    "likes": 678,
+    "location": "重庆市永川区",
+    "media": [
+      "/resources/img/sq_006_1.jpg",
+      "/resources/img/sq_006_2.jpg"
+    ],
+    "title": "永川豆豉制作工艺展示",
+    "views": 2765
+  },
+  {
+    "author": "13800138007",
+    "category": "民间艺术",
+    "comments": 276,
+    "content": "丰都傩戏是重庆市非物质文化遗产，融合了民间信仰、音乐、舞蹈等多种艺术形式。今天在丰都鬼城景区举行了一场精彩的傩戏表演。",
+    "create_time": "2024-01-22 16:50:00",
+    "id": "sq_007",
+    "likes": 987,
+    "location": "重庆市丰都县",
+    "media": [
+      "/resources/img/sq_007_1.jpg",
+      "/resources/video/sq_007_performance.mp4"
+    ],
+    "title": "丰都鬼城傩戏表演",
+    "views": 4321
+  },
+  {
+    "author": "13800138008",
+    "category": "传统美食",
+    "comments": 187,
+    "content": "涪陵榨菜是重庆市著名的非物质文化遗产，其独特的腌制工艺举世闻名。今天在涪陵榨菜博物馆，非遗传承人现场展示了传统的制作技艺。",
+    "create_time": "2024-01-21 13:25:00",
+    "id": "sq_008",
+    "likes": 756,
+    "location": "重庆市涪陵区",
+    "media": [
+      "/resources/img/sq_008_1.jpg",
+      "/resources/img/sq_008_2.jpg"
+    ],
+    "title": "涪陵榨菜制作技艺展示",
+    "views": 3098
+  },
+  {
+    "author": "13800138009",
+    "category": "民间艺术",
+    "comments": 143,
+    "content": "巴南花灯是重庆市非物质文化遗产，具有独特的艺术魅力。在本次展演中，多位非遗传承人展示了花灯制作技艺，并进行了精彩的表演。",
+    "create_time": "2024-01-20 20:15:00",
+    "id": "sq_009",
+    "likes": 654,
+    "location": "重庆市巴南区",
+    "media": [
+      "/resources/img/sq_009_1.jpg",
+      "/resources/video/sq_009_show.mp4"
+    ],
+    "title": "巴南花灯艺术展演",
+    "views": 2876
+  },
+  {
+    "author": "13800138010",
+    "category": "传统工艺",
+    "comments": 289,
+    "content": "大足石刻是世界文化遗产，其修复技艺是重要的非物质文化遗产。今天在大足石刻研究院，专家团队展示了传统的石刻修复技艺和保护方法。",
+    "create_time": "2024-01-19 10:55:00",
+    "id": "sq_010",
+    "likes": 1098,
+    "location": "重庆市大足区",
+    "media": [
+      "/resources/img/sq_010_1.jpg",
+      "/resources/img/sq_010_2.jpg",
+      "/resources/video/sq_010_demo.mp4"
+    ],
+    "title": "大足石刻修复技艺展示",
+    "views": 4567
+  }
+]

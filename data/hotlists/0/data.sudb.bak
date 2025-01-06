@@ -1,0 +1,122 @@
+[
+  {
+    "comments": 856,
+    "cover": "resources/images/folding_fan.jpg",
+    "create_time": "2024-01-28 09:30:00",
+    "id": "hotlist_001",
+    "likes": 3200,
+    "rank": 1,
+    "source": "重庆日报",
+    "summary": "荣昌折扇传承人张大师展示独特制扇技艺，新式设计融合传统工艺引发年轻人关注",
+    "title": "重庆荣昌折扇：千年工艺的现代传承",
+    "views": 12500
+  },
+  {
+    "comments": 645,
+    "cover": "resources/images/youyang_festival.jpg",
+    "create_time": "2024-01-28 10:15:00",
+    "id": "hotlist_002",
+    "likes": 2900,
+    "rank": 2,
+    "source": "华西都市报",
+    "summary": "第五届桃花源非遗文化节展示土家族织锦、吊脚楼营造等20余项非遗项目",
+    "title": "重庆酉阳桃花源非遗文化节开幕",
+    "views": 10800
+  },
+  {
+    "comments": 534,
+    "cover": "resources/images/fire_dragon.jpg",
+    "create_time": "2024-01-28 11:00:00",
+    "id": "hotlist_003",
+    "likes": 2600,
+    "rank": 3,
+    "source": "重庆晨报",
+    "summary": "年轻火龙表演者王小明创新编排火龙表演，让千年非遗焕发新活力",
+    "title": "90后匠人演绎重庆铜梁火龙绝技",
+    "views": 9500
+  },
+  {
+    "comments": 489,
+    "cover": "resources/images/rice_vinegar.jpg",
+    "create_time": "2024-01-28 13:20:00",
+    "id": "hotlist_004",
+    "likes": 2400,
+    "rank": 4,
+    "source": "重庆商报",
+    "summary": "第四代传承人李师傅分享独特酿造工艺，传统米醋制作全过程首次公开",
+    "title": "重庆江津米醋：千年酿造技艺的守护者",
+    "views": 8900
+  },
+  {
+    "comments": 467,
+    "cover": "resources/images/embroidery.jpg",
+    "create_time": "2024-01-28 14:45:00",
+    "id": "hotlist_005",
+    "likes": 2200,
+    "rank": 5,
+    "source": "重庆晚报",
+    "summary": "80后绣娘张艺将传统蜀绣与现代设计结合，作品获国际时装周关注",
+    "title": "巴渝绣娘：重庆丝绣技艺的新生代传承",
+    "views": 8200
+  },
+  {
+    "comments": 423,
+    "cover": "resources/images/douchi.jpg",
+    "create_time": "2024-01-28 15:30:00",
+    "id": "hotlist_006",
+    "likes": 2000,
+    "rank": 6,
+    "source": "重庆时报",
+    "summary": "百年老字号永川豆豉制作技艺入选市级非遗名录，传统工艺焕发新生机",
+    "title": "永川豆豉：非遗美食背后的匠心传承",
+    "views": 7800
+  },
+  {
+    "comments": 398,
+    "cover": "resources/images/stone_carving.jpg",
+    "create_time": "2024-01-28 16:15:00",
+    "id": "hotlist_007",
+    "likes": 1900,
+    "rank": 7,
+    "source": "重庆日报",
+    "summary": "运用3D扫描技术对千年石刻进行数字化保护，让文物活起来",
+    "title": "大足石刻数字化保护项目启动",
+    "views": 7200
+  },
+  {
+    "comments": 356,
+    "cover": "resources/images/zhacai.jpg",
+    "create_time": "2024-01-28 17:00:00",
+    "id": "hotlist_008",
+    "likes": 1700,
+    "rank": 8,
+    "source": "华龙网",
+    "summary": "百年榨菜制作工艺展示馆开放，传统手工腌制技艺全程展示",
+    "title": "重庆涪陵榨菜非遗传承基地揭牌",
+    "views": 6800
+  },
+  {
+    "comments": 312,
+    "cover": "resources/images/wood_painting.jpg",
+    "create_time": "2024-01-28 17:45:00",
+    "id": "hotlist_009",
+    "likes": 1500,
+    "rank": 9,
+    "source": "重庆商报",
+    "summary": "非遗传承人创新设计二十四节气年画系列，传统年画艺术走进现代生活",
+    "title": "重庆梁平木版年画焕发新生",
+    "views": 6200
+  },
+  {
+    "comments": 289,
+    "cover": "resources/images/horn.jpg",
+    "create_time": "2024-01-28 18:30:00",
+    "id": "hotlist_010",
+    "likes": 1400,
+    "rank": 10,
+    "source": "重庆晚报",
+    "summary": "羊角号艺术家与交响乐团合作，传统民族乐器演绎现代音乐",
+    "title": "重庆武隆羊角号：千年古乐器的现代传唱",
+    "views": 5800
+  }
+]
