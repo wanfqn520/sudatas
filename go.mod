@@ -1,4 +1,4 @@
-module sudatas
+module github.com/wanfqn520/sudatas
 
 go 1.16
 
